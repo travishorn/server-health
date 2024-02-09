@@ -6,7 +6,7 @@ export default async function () {
 	// Get the journalctl output for the db backup job
 	const stdout = await serverCommand('sudo -S journalctl -n 2 -u backup_databases.service');
 	const lines = stdout.split('\n');
-	let timestamp;
+	let finished;
 	let succeeded = false;
 	let cpuTimeConsumed;
 
@@ -15,13 +15,13 @@ export default async function () {
 		const timestampMatch = line.match(/^(\w{3} \d{2} \d{2}:\d{2}:\d{2})/);
 		const cpuTimeMatch = line.match(/Consumed (.+?) CPU time\./);
 
-		if (timestampMatch) timestamp = parseJournalTimestamp(timestampMatch[1]);
+		if (timestampMatch) finished = parseJournalTimestamp(timestampMatch[1]);
 		if (cpuTimeMatch) cpuTimeConsumed = parseJournalDuration(cpuTimeMatch[1]);
 		if (line.includes('Succeeded.')) succeeded = true;
 	}
 
 	return {
-		timestamp,
+		finished,
 		succeeded,
 		cpuTimeConsumed
 	};
