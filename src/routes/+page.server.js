@@ -2,7 +2,8 @@ import {
 	getSystemUpSince,
 	getLoadAverages,
 	getRebootRequired,
-	getLatestDatabaseBackup
+	getLatestDatabaseBackup,
+	getDatabaseBackupDates
 } from '../lib/index.js';
 
 /** @type {import('./$types').PageServerLoad} */
@@ -11,6 +12,9 @@ export async function load() {
 		systemUpSince: await getSystemUpSince(),
 		loadAverages: await getLoadAverages(),
 		rebootRequired: await getRebootRequired(),
-		latestDatabaseBackup: await getLatestDatabaseBackup()
+		databaseBackups: {
+			latest: await getLatestDatabaseBackup(),
+			dates: await getDatabaseBackupDates()
+		}
 	};
 }
