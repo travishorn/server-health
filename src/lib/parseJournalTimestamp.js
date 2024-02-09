@@ -5,6 +5,6 @@ import { DateTime } from 'luxon';
  * @param {string} dateTimeString A string representing a datetime like "Feb 09 00:03:28"
  * @returns {Date} A JavaScript date
  */
-export default function parseJournalTimestamp(dateTimeString) {
+export default function (dateTimeString) {
 	return DateTime.fromFormat(dateTimeString, 'LLL dd HH:mm:ss').toJSDate();
 }

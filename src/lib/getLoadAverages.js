@@ -1,6 +1,6 @@
 import serverCommand from './serverCommand.js';
 
-export default async function getLoadAverages() {
+export default async function () {
 	const stdout = await serverCommand('uptime');
 
 	const uptimeRegex =

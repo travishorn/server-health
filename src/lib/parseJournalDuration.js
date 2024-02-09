@@ -5,7 +5,7 @@ import { Duration } from 'luxon';
  * @param {string} durationString A string representing a duration like "3min 25.870s"
  * @returns {number|undefined} The duration in milliseconds
  */
-export default function parseJournalDuration(durationString) {
+export default function (durationString) {
 	if (!durationString) {
 		return undefined;
 	}
@@ -45,8 +45,5 @@ export default function parseJournalDuration(durationString) {
 		}
 	}
 
-	// Create Luxon duration object
-	const luxonDuration = Duration.fromObject(durationComponents);
-
-	return luxonDuration.toMillis();
+	return Duration.fromObject(durationComponents).toMillis();
 }

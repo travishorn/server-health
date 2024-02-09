@@ -1,6 +1,6 @@
 import serverCommand from './serverCommand.js';
 
-export default async function getRebootRequired() {
+export default async function () {
 	try {
 		const stdout = await serverCommand('ls /var/run/reboot-required');
 
