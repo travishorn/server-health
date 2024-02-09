@@ -53,7 +53,6 @@ Navigate to http://localhost:5173/ in your browser
 - Storage capacity
 - RAM usage
 - Top cpu usage
-- Split functions into separate files
 - Pretty UI
 
 ## License
