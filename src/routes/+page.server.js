@@ -1,14 +1,16 @@
-import { getSystemUpSince, getLoadAverages, getRebootRequired } from '../lib/index.js';
+import {
+	getSystemUpSince,
+	getLoadAverages,
+	getRebootRequired,
+	getLatestDatabaseBackup
+} from '../lib/index.js';
 
 /** @type {import('./$types').PageServerLoad} */
 export async function load() {
-	const systemUpSince = await getSystemUpSince();
-	const loadAverages = await getLoadAverages();
-	const rebootRequired = await getRebootRequired();
-
 	return {
-		systemUpSince,
-		loadAverages,
-		rebootRequired
+		systemUpSince: await getSystemUpSince(),
+		loadAverages: await getLoadAverages(),
+		rebootRequired: await getRebootRequired(),
+		latestDatabaseBackup: await getLatestDatabaseBackup()
 	};
 }

@@ -1,6 +1,7 @@
 {
 	"name": "server-health",
 	"version": "0.0.1",
+	"description": "A web app for monitoring web/database server health. Very tightly coupled to the system configuration I use.",
 	"private": true,
 	"scripts": {
 		"dev": "vite dev",
@@ -11,6 +12,8 @@
 		"lint": "prettier --check . && eslint .",
 		"format": "prettier --write ."
 	},
+	"type": "module",
+	"license": "MIT",
 	"devDependencies": {
 		"@sveltejs/adapter-auto": "^3.0.0",
 		"@sveltejs/kit": "^2.0.0",
@@ -27,8 +30,8 @@
 		"typescript": "^5.0.0",
 		"vite": "^5.0.3"
 	},
-	"type": "module",
 	"dependencies": {
+		"luxon": "^3.4.4",
 		"ssh2": "^1.15.0"
 	}
 }
