@@ -3,6 +3,7 @@ import {
 	getLoadAverages,
 	getRebootRequired,
 	getLatestDatabaseBackup,
+	getLatestETLJob,
 	getDatabaseBackupDates
 } from '../lib/index.js';
 
@@ -15,6 +16,7 @@ export async function load() {
 		databaseBackups: {
 			latest: await getLatestDatabaseBackup(),
 			dates: await getDatabaseBackupDates()
-		}
+		},
+		latestETLJob: await getLatestETLJob()
 	};
 }

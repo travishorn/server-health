@@ -44,7 +44,6 @@ Navigate to http://localhost:5173/ in your browser
 
 ## To Do
 
-- ETL logs
 - Unattended upgrade logs
 - Unattended upgrade details
 - Unattended upgrade application details

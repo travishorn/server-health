@@ -11,7 +11,7 @@ export default function (durationString) {
 	}
 
 	// Regular expression to extract components (hours, minutes, seconds)
-	const regex = /(\d+(\.\d+)?)(hr|h|min|s)/g;
+	const regex = /(\d+(\.\d+)?)(hr|h|min|m|sec|s)/g;
 	let matches = durationString.matchAll(regex);
 
 	// Convert matches to an object with keys as units and values as corresponding numbers
@@ -36,10 +36,12 @@ export default function (durationString) {
 			case 'hr':
 				durationComponents.hours = value;
 				break;
+			case 'm':
 			case 'min':
 				durationComponents.minutes = value;
 				break;
 			case 's':
+			case 'sec':
 				durationComponents.seconds = value;
 				break;
 		}
