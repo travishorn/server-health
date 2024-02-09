@@ -1,7 +1,8 @@
 # Server Health
 
 A web app for monitoring web/database server health. Very tightly coupled to the
-system configuration I use.
+system configuration I use. Just outputs data in JSON format right now. Pretty
+UI coming later.
 
 ## Installation
 
@@ -26,7 +27,7 @@ npm install
 Copy the environment variable example file
 
 ```
-cp .env.local.example
+cp .env.local.example .env
 ```
 
 Set your environment variables in `.env`
