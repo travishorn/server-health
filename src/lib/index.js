@@ -13,8 +13,8 @@ const privateKey = readFileSync(PRIVATE_KEY_PATH);
 
 /**
  * Run a command on the server
- * @param {string} command
- * @returns
+ * @param {string} command The command to run on the server
+ * @returns {Promise<string>} The output of the command
  */
 export async function serverCommand(command) {
 	return new Promise((resolve, reject) => {
@@ -64,18 +64,23 @@ export async function getLoadAverages() {
 		/up\s+(.*?),\s+([\s\S]+?)\s+user.*load average:\s+([\d.]+),\s+([\d.]+),\s+([\d.]+)/;
 	const matches = stdout.match(uptimeRegex);
 
-	return {
-		'1min': parseFloat(matches[3]),
-		'5min': parseFloat(matches[4]),
-		'15min': parseFloat(matches[5])
-	};
+	return matches
+		? {
+				'1min': parseFloat(matches[3]),
+				'5min': parseFloat(matches[4]),
+				'15min': parseFloat(matches[5])
+			}
+		: { '1min': undefined, '5min': undefined, '15min': undefined };
 }
 
 export async function getRebootRequired() {
 	try {
 		const stdout = await serverCommand('ls /var/run/reboot-required');
+
+		// If the output of the command is /var/run/reboot-required, a reboot is required
 		return stdout === '/var/run/reboot-required\n';
 	} catch (err) {
+		// If the file doesn't exist, no reboot is required
 		return err === "ls: cannot access '/var/run/reboot-required': No such file or directory";
 	}
 }
@@ -87,7 +92,7 @@ export async function getRebootRequired() {
  */
 function parseJournalDuration(durationString) {
 	if (!durationString) {
-		return undefined; // or handle the undefined case as needed
+		return undefined;
 	}
 
 	// Regular expression to extract components (hours, minutes, seconds)
@@ -96,6 +101,7 @@ function parseJournalDuration(durationString) {
 
 	// Convert matches to an object with keys as units and values as corresponding numbers
 	const durationComponents = {};
+
 	for (const match of matches) {
 		const value = parseFloat(match[1]);
 		const unit = match[3];
@@ -130,6 +136,7 @@ function parseJournalTimestamp(dateTimeString) {
 }
 
 export async function getLatestDatabaseBackup() {
+	// Get the journalctl output for the db backup job
 	const stdout = await serverCommand('sudo -S journalctl -n 2 -u backup_databases.service');
 	const lines = stdout.split('\n');
 	let timestamp;
@@ -137,12 +144,12 @@ export async function getLatestDatabaseBackup() {
 	let cpuTimeConsumed;
 
 	for (const line of lines) {
+		// Look for specific patterns in the string to pull out relevant info
 		const timestampMatch = line.match(/^(\w{3} \d{2} \d{2}:\d{2}:\d{2})/);
 		const cpuTimeMatch = line.match(/Consumed (.+?) CPU time\./);
 
 		if (timestampMatch) timestamp = parseJournalTimestamp(timestampMatch[1]);
 		if (cpuTimeMatch) cpuTimeConsumed = parseJournalDuration(cpuTimeMatch[1]);
-
 		if (line.includes('Succeeded.')) succeeded = true;
 	}
 
