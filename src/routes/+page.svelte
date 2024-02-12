@@ -16,7 +16,22 @@
 		'hours',
 		'minutes'
 	]);
-	const dbBackupDuration = Duration.fromMillis(data.databaseBackups.latest.cpuTimeConsumed, {
+
+	const dbBackupDuration = Duration.fromMillis(data.databaseBackups.latest.cpuTimeConsumed ?? 0, {
+		numberingSystem: 'latn'
+	})
+		.shiftTo('minutes')
+		.get('minutes')
+		.toFixed(1);
+
+	const etlDuration = Duration.fromMillis(data.latestETLJob.cpuTimeConsumed ?? 0, {
+		numberingSystem: 'latn'
+	})
+		.shiftTo('minutes')
+		.get('minutes')
+		.toFixed(1);
+
+	const etlClockDuration = Duration.fromMillis(data.latestETLJob.realTimeConsumed ?? 0, {
 		numberingSystem: 'latn'
 	})
 		.shiftTo('minutes')
@@ -85,7 +100,7 @@
 
 		<Panel title="Uptime">
 			<div class="flex flex-col gap-6">
-				<div class="flex gap-8 justify-between">
+				<div class="flex gap-8 justify-center">
 					{#each Object.keys(uptime.toObject()) as part}
 						{#if uptime.get(part) > 0}
 							<div>
@@ -98,7 +113,7 @@
 
 				<div>
 					<div class="text-2xl text-center">
-						{data.reboot.monthlyReboot.checkedOn.toLocaleDateString()}
+						{data.reboot.monthlyReboot.checkedOn?.toLocaleDateString()}
 					</div>
 					<div class="text-gray-400 text-sm text-center">last reboot checkpoint</div>
 				</div>
@@ -117,7 +132,7 @@
 				<div class="flex gap-8 justify-between">
 					<div>
 						<div class="text-2xl text-center">
-							{data.databaseBackups.latest.finished.toLocaleDateString()}
+							{data.databaseBackups.latest.finished?.toLocaleDateString()}
 						</div>
 						<div class="text-gray-400 text-sm text-center">latest backup</div>
 					</div>
@@ -135,11 +150,42 @@
 					</div>
 				{/if}
 
-				<StringTable items={data.databaseBackups.dates.map((d) => d.toLocaleDateString())} />
+				<StringTable items={data.databaseBackups.dates.map((d) => d?.toLocaleDateString())} />
 			</div>
 		</Panel>
 
-		<Panel title="ETL"></Panel>
+		<Panel title="ETL">
+			<div class="flex flex-col gap-6">
+				<div class="flex gap-8 justify-between">
+					<div>
+						<div class="text-2xl text-center">
+							{data.latestETLJob.finished?.toLocaleDateString()}
+							{data.latestETLJob.finished?.toLocaleTimeString()}
+						</div>
+						<div class="text-gray-400 text-sm text-center">latest job completed</div>
+					</div>
+				</div>
+
+				{#if !data.latestETLJob.succeeded}
+					<div class="flex items-center gap-2 justify-center text-sm text-red-600">
+						<div class="h-2 w-2 bg-red-600 rounded-full"></div>
+						JOB FAILED
+					</div>
+				{/if}
+
+				<div class="flex gap-8 justify-center">
+					<div>
+						<div class="text-2xl text-center">{etlDuration}</div>
+						<div class="text-gray-400 text-sm text-center">CPU mins</div>
+					</div>
+
+					<div>
+						<div class="text-2xl text-center">{etlClockDuration}</div>
+						<div class="text-gray-400 text-sm text-center">clock mins</div>
+					</div>
+				</div>
+			</div>
+		</Panel>
 
 		<Panel title="Upgrades"></Panel>
 	</div>

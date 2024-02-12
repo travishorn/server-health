@@ -44,8 +44,7 @@ Navigate to http://localhost:5173/ in your browser
 
 ## To Do
 
-- Add all sections to the UI
-- Consider looking for large files `find / -type f -exec du -h {} + | sort -rh | head -n 5`
+- Add upgrades section to UI
 
 ## License
 
