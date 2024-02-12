@@ -4,5 +4,5 @@
 </script>
 
 <div>
-	{JSON.stringify(data)}
+	{JSON.stringify(data, null, 2)}
 </div>

@@ -1,10 +1,14 @@
 import {
 	getSystemUpSince,
 	getLoadAverages,
-	getRebootRequired,
+	getReboot,
 	getLatestDatabaseBackup,
 	getLatestETLJob,
-	getDatabaseBackupDates
+	getDatabaseBackupDates,
+	getUnattendedUpgrade,
+	getStorage,
+	getMemory,
+	getProcesses
 } from '../lib/index.js';
 
 /** @type {import('./$types').PageServerLoad} */
@@ -12,11 +16,15 @@ export async function load() {
 	return {
 		systemUpSince: await getSystemUpSince(),
 		loadAverages: await getLoadAverages(),
-		rebootRequired: await getRebootRequired(),
+		reboot: await getReboot(),
 		databaseBackups: {
 			latest: await getLatestDatabaseBackup(),
 			dates: await getDatabaseBackupDates()
 		},
-		latestETLJob: await getLatestETLJob()
+		latestETLJob: await getLatestETLJob(),
+		unattendedUpgrade: await getUnattendedUpgrade(),
+		storage: await getStorage(),
+		memory: await getMemory(),
+		processes: await getProcesses()
 	};
 }
