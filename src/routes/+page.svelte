@@ -3,6 +3,8 @@
 	export let data;
 </script>
 
+<h1 class="text-3xl font-bold underline">Server Health</h1>
+
 <div>
-	{JSON.stringify(data, null, 2)}
+	{JSON.stringify(data)}
 </div>
