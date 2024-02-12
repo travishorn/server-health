@@ -1,6 +1,6 @@
 import serverCommand from './serverCommand.js';
 
-export default async function () {
+async function getTotals() {
 	const stdout = await serverCommand('df -B1');
 	const lines = stdout.split('\n');
 	let used;
@@ -19,5 +19,29 @@ export default async function () {
 	return {
 		used,
 		total
+	};
+}
+
+async function getFiles() {
+	const stdout = await serverCommand(
+		'sudo -S find / -type d -name proc -prune -o -type f -exec du -b {} + | sort -rh | head -n 5'
+	);
+	return stdout
+		.split('\n')
+		.slice(0, 5)
+		.map((line) => {
+			const parts = line.split('\t');
+
+			return {
+				name: parts[1],
+				size: Number(parts[0])
+			};
+		});
+}
+
+export default async function () {
+	return {
+		...(await getTotals()),
+		files: await getFiles()
 	};
 }

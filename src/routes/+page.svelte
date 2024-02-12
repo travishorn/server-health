@@ -1,17 +1,34 @@
 <script>
 	import prettyBytes from 'pretty-bytes';
+	import { DateTime, Duration } from 'luxon';
 	import Panel from '$lib/components/Panel.svelte';
 	import ProcessTable from '$lib/components/ProcessTable.svelte';
+	import FileTable from '$lib/components/FileTable.svelte';
+	import StringTable from '$lib/components/StringTable.svelte';
 
 	/** @type {import('./$types').PageData} */
 	export let data;
+
+	const uptime = DateTime.now().diff(DateTime.fromJSDate(data.systemUpSince), [
+		'years',
+		'months',
+		'days',
+		'hours',
+		'minutes'
+	]);
+	const dbBackupDuration = Duration.fromMillis(data.databaseBackups.latest.cpuTimeConsumed, {
+		numberingSystem: 'latn'
+	})
+		.shiftTo('minutes')
+		.get('minutes')
+		.toFixed(1);
 </script>
 
 <div class="bg-gray-200 min-h-screen p-10">
-	<div class="max-w-3xl mx-auto grid grid-flow-col auto-cols-max gap-6">
+	<div class="container justify-center mx-auto flex flex-wrap gap-6">
 		<Panel title="CPU">
 			<div class="flex flex-col gap-6">
-				<div class="flex gap-8">
+				<div class="flex gap-8 justify-center">
 					<div>
 						<div class="text-2xl text-center">{data.cpu.loadAverages['1min'] * 100}%</div>
 						<div class="text-gray-400 text-sm text-center">1m</div>
@@ -61,8 +78,70 @@
 						</div>
 					</div>
 				{/if}
+
+				<FileTable files={data.storage.files} />
 			</div>
 		</Panel>
+
+		<Panel title="Uptime">
+			<div class="flex flex-col gap-6">
+				<div class="flex gap-8 justify-between">
+					{#each Object.keys(uptime.toObject()) as part}
+						{#if uptime.get(part) > 0}
+							<div>
+								<div class="text-2xl text-center">{Math.floor(uptime.get(part))}</div>
+								<div class="text-gray-400 text-sm text-center">{part}</div>
+							</div>
+						{/if}
+					{/each}
+				</div>
+
+				<div>
+					<div class="text-2xl text-center">
+						{data.reboot.monthlyReboot.checkedOn.toLocaleDateString()}
+					</div>
+					<div class="text-gray-400 text-sm text-center">last reboot checkpoint</div>
+				</div>
+
+				{#if data.reboot.rebootRequiredNow}
+					<div class="flex items-center gap-2 justify-center text-sm">
+						<div class="h-2 w-2 bg-amber-400 rounded-full"></div>
+						reboot pending
+					</div>
+				{/if}
+			</div>
+		</Panel>
+
+		<Panel title="Database Backup">
+			<div class="flex flex-col gap-6">
+				<div class="flex gap-8 justify-between">
+					<div>
+						<div class="text-2xl text-center">
+							{data.databaseBackups.latest.finished.toLocaleDateString()}
+						</div>
+						<div class="text-gray-400 text-sm text-center">latest backup</div>
+					</div>
+
+					<div>
+						<div class="text-2xl text-center">{dbBackupDuration}</div>
+						<div class="text-gray-400 text-sm text-center">CPU mins</div>
+					</div>
+				</div>
+
+				{#if !data.databaseBackups.latest.succeeded}
+					<div class="flex items-center gap-2 justify-center text-sm text-red-600">
+						<div class="h-2 w-2 bg-red-600 rounded-full"></div>
+						BACKUP FAILED
+					</div>
+				{/if}
+
+				<StringTable items={data.databaseBackups.dates.map((d) => d.toLocaleDateString())} />
+			</div>
+		</Panel>
+
+		<Panel title="ETL"></Panel>
+
+		<Panel title="Upgrades"></Panel>
 	</div>
 </div>
 
