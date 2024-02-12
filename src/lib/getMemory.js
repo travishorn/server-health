@@ -1,7 +1,27 @@
 import serverCommand from './serverCommand.js';
 
-export default async function () {
-	const stdout = await serverCommand('free');
+async function getProcesses() {
+	const stdout = await serverCommand('ps aux --sort=-%mem | head -n 6 | tail -n 5');
+	const lines = stdout.split('\n');
+
+	return lines
+		.map((line) => {
+			const parts = line.match(/\S+/g);
+
+			if (parts) {
+				return {
+					name: parts[10],
+					usage: Number(parts[3])
+				};
+			} else {
+				return null;
+			}
+		})
+		.filter((process) => process);
+}
+
+async function getUsage() {
+	const stdout = await serverCommand('free -b');
 	const lines = stdout.split('\n');
 	let used;
 	let total;
@@ -19,5 +39,12 @@ export default async function () {
 	return {
 		used,
 		total
+	};
+}
+
+export default async function () {
+	return {
+		...(await getUsage()),
+		processes: await getProcesses()
 	};
 }

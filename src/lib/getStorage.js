@@ -1,7 +1,7 @@
 import serverCommand from './serverCommand.js';
 
 export default async function () {
-	const stdout = await serverCommand('df');
+	const stdout = await serverCommand('df -B1');
 	const lines = stdout.split('\n');
 	let used;
 	let total;

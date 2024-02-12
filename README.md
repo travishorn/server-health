@@ -44,14 +44,8 @@ Navigate to http://localhost:5173/ in your browser
 
 ## To Do
 
-- Unattended upgrade logs
-- Unattended upgrade details
-- Unattended upgrade application details
-- Unattended reboot logs
-- Storage capacity
-- RAM usage
-- Top cpu usage
-- Pretty UI
+- Add all sections to the UI
+- Consider looking for large files `find / -type f -exec du -h {} + | sort -rh | head -n 5`
 
 ## License
 

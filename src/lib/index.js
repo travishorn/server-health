@@ -1,5 +1,5 @@
 import getLatestDatabaseBackup from './getLatestDatabaseBackup';
-import getLoadAverages from './getLoadAverages';
+import getCPU from './getCPU';
 import getReboot from './getReboot';
 import getSystemUpSince from './getSystemUpSince';
 import getDatabaseBackupDates from './getDatabaseBackupDates';
@@ -11,7 +11,7 @@ import getProcesses from './getProcesses';
 
 export {
 	getLatestDatabaseBackup,
-	getLoadAverages,
+	getCPU,
 	getReboot,
 	getSystemUpSince,
 	getDatabaseBackupDates,

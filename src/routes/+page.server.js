@@ -1,6 +1,6 @@
 import {
 	getSystemUpSince,
-	getLoadAverages,
+	getCPU,
 	getReboot,
 	getLatestDatabaseBackup,
 	getLatestETLJob,
@@ -15,7 +15,7 @@ import {
 export async function load() {
 	return {
 		systemUpSince: await getSystemUpSince(),
-		loadAverages: await getLoadAverages(),
+		cpu: await getCPU(),
 		reboot: await getReboot(),
 		databaseBackups: {
 			latest: await getLatestDatabaseBackup(),
