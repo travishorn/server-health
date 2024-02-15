@@ -1,5 +1,5 @@
 <script>
-	/** @type {string[]} */
+	/** @type {Array<string|undefined>} */
 	export let items = [];
 </script>
 

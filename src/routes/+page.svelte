@@ -37,6 +37,13 @@
 		.shiftTo('minutes')
 		.get('minutes')
 		.toFixed(1);
+
+	const upgradeDuration = Duration.fromMillis(data.unattendedUpgrade.cpuTimeConsumed ?? 0, {
+		numberingSystem: 'latn'
+	})
+		.shiftTo('seconds')
+		.get('seconds')
+		.toFixed(1);
 </script>
 
 <div class="bg-gray-200 min-h-screen p-10">
@@ -187,10 +194,31 @@
 			</div>
 		</Panel>
 
-		<Panel title="Upgrades"></Panel>
-	</div>
-</div>
+		<Panel title="Upgrades">
+			<div class="flex flex-col gap-6">
+				<div class="flex gap-8 justify-between">
+					<div>
+						<div class="text-2xl text-center">
+							{data.unattendedUpgrade.finished?.toLocaleDateString()}
+						</div>
+						<div class="text-gray-400 text-sm text-center">latest job completed</div>
+					</div>
 
-<div>
-	{JSON.stringify(data)}
+					<div>
+						<div class="text-2xl text-center">{upgradeDuration}</div>
+						<div class="text-gray-400 text-sm text-center">CPU secs</div>
+					</div>
+				</div>
+
+				{#if !data.unattendedUpgrade.succeeded}
+					<div class="flex items-center gap-2 justify-center text-sm text-red-600">
+						<div class="h-2 w-2 bg-red-600 rounded-full"></div>
+						JOB FAILED
+					</div>
+				{/if}
+
+				<StringTable items={data.unattendedUpgrade.packagesUpgraded} />
+			</div>
+		</Panel>
+	</div>
 </div>

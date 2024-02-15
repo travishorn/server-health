@@ -1,8 +1,9 @@
 # Server Health
 
 A web app for monitoring web/database server health. Very tightly coupled to the
-system configuration I use. Just outputs data in JSON format right now. Pretty
-UI coming later.
+system configuration I use.
+
+![screenshot](./screenshot.png)
 
 ## Installation
 
@@ -41,10 +42,6 @@ npm run dev
 ```
 
 Navigate to http://localhost:5173/ in your browser
-
-## To Do
-
-- Add upgrades section to UI
 
 ## License
 
